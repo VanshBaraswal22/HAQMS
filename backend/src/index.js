@@ -2,6 +2,37 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
+console.log("STEP 1: index.js loaded");
+
+const express = require('express');
+console.log("STEP 2: express loaded");
+
+const cors = require('cors');
+console.log("STEP 3: cors loaded");
+
+const dotenv = require('dotenv');
+console.log("STEP 4: dotenv loaded");
+
+dotenv.config();
+console.log("STEP 5: env loaded");
+
+const authRoutes = require('./routes/auth');
+console.log("STEP 6: auth loaded");
+
+const patientRoutes = require('./routes/patients');
+console.log("STEP 7: patients loaded");
+
+const doctorRoutes = require('./routes/doctors');
+console.log("STEP 8: doctors loaded");
+
+const appointmentRoutes = require('./routes/appointments');
+console.log("STEP 9: appointments loaded");
+
+const queueRoutes = require('./routes/queue');
+console.log("STEP 10: queue loaded");
+
+const reportRoutes = require('./routes/reports');
+console.log("STEP 11: reports loaded");
 // Load environment variables
 dotenv.config();
 
