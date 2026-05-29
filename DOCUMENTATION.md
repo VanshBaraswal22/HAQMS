@@ -244,6 +244,23 @@ https://haqms-production-780f.up.railway.app/
    - Fixed JWT expiration bypass
    - Restored authorization functionality
 
+   Backend Deployment:
+
+- Railway
+- PostgreSQL database connected
+- Prisma migrations applied
+- Database seeded with demo accounts
+
+Frontend Deployment:
+
+- Vercel
+- Connected to Railway backend
+
+Demo Credentials:
+Admin: admin@haqms.com / password123
+Receptionist: reception1@haqms.com / password123
+Doctor: doctor1@haqms.com / password123
+
 ## Final Project Status
 
 Frontend fixes: ✅
