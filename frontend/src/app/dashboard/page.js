@@ -1,5 +1,5 @@
 'use client';
-
+import Link from "next/link";
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/common/Navbar';
@@ -21,10 +21,21 @@ export default function Dashboard() {
     }
   }, [user]);
 
-  if (!user) return null;
+  //if (!user) return null;
 
   // Global State
-  const [activeTab, setActiveTab] = useState(user.role === 'ADMIN' ? 'reports' : user.role === 'RECEPTIONIST' ? 'patients' : 'appointments');
+  const [activeTab, setActiveTab] = useState('appointments');
+  useEffect(() => {
+  if (!user) return;
+
+  setActiveTab(
+    user.role === 'ADMIN'
+      ? 'reports'
+      : user.role === 'RECEPTIONIST'
+      ? 'patients'
+      : 'appointments'
+  );
+}, [user]);
 
   // ==========================================
   // STATE FOR RECEPTIONIST WORKFLOWS
@@ -96,15 +107,20 @@ export default function Dashboard() {
   };
 
   // Trigger Patient List Fetch (Every keystroke trigger re-renders parent! - Performance bug)
-  useEffect(() => {
-    if (user.role === 'RECEPTIONIST' || user.role === 'ADMIN') {
-      fetchPatients(1);
-    }
-  }, [patientSearch, patientGender]);
+useEffect(() => {
+  if (!user) return;
+
+  if (user.role === 'RECEPTIONIST' || user.role === 'ADMIN') {
+    fetchPatients(1);
+  }
+}, [user, patientSearch, patientGender]);
 
   // Fetch Doctors for booking drop-down
   const fetchDoctorsDropdown = async () => {
     try {
+      console.log("TOKEN:", token);
+    console.log("URL:", `${API_BASE_URL}/doctors`);
+
       const res = await fetch(`${API_BASE_URL}/doctors`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -114,10 +130,11 @@ export default function Dashboard() {
       console.error(e);
     }
   };
+useEffect(() => {
+  if (!token) return;
 
-  useEffect(() => {
-    fetchDoctorsDropdown();
-  }, []);
+  fetchDoctorsDropdown();
+}, [token]);
 
   // Handle Patient Registration
   const handleRegisterPatient = async (e) => {
@@ -252,8 +269,8 @@ export default function Dashboard() {
   // ==========================================
   // DOCTOR WORKFLOW FUNCTIONS
   // ==========================================
-  const fetchDoctorWorklist = async () => {
-    if (user.role !== 'DOCTOR') return;
+const fetchDoctorWorklist = async () => {
+  if (!user || user.role !== 'DOCTOR') return;
     try {
       // Find matching doctor from doctors dropdown using user ID link
       const matchedDoc = doctorsList.find(d => d.userId === user.id);
@@ -281,10 +298,12 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    if (user.role === 'DOCTOR' && doctorsList.length > 0) {
-      fetchDoctorWorklist();
-    }
-  }, [doctorsList]);
+  if (!user) return;
+
+  if (user.role === 'DOCTOR' && doctorsList.length > 0) {
+    fetchDoctorWorklist();
+  }
+}, [user, doctorsList]);
 
   // Update token status (WAITING -> CALLING -> COMPLETED / SKIPPED)
   const handleUpdateQueueStatus = async (tokenId, newStatus) => {
@@ -363,7 +382,9 @@ export default function Dashboard() {
       console.error(e);
     }
   };
-
+if (!user) {
+  return null;
+}
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -893,9 +914,9 @@ export default function Dashboard() {
                       Assuming medicalHistory is always populated. Accesses a method on a nullable property
                       without optional chaining! If medicalHistory is null (which is the case for Batman, Clark Kent, etc.),
                       this code throws: "Cannot read properties of null (reading 'toUpperCase')" and crashes the app! */}
-                  <p className="text-slate-700 dark:text-slate-300 leading-5 text-sm font-semibold">
-                    {selectedPatientHistory.medicalHistory.toUpperCase()}
-                  </p>
+                 <p className="text-slate-700 dark:text-slate-300 leading-5 text-sm font-semibold">
+  {selectedPatientHistory.medicalHistory?.toUpperCase() || "NO MEDICAL HISTORY AVAILABLE"}
+</p>
                 </div>
 
                 <div className="pt-2 flex justify-between items-center text-xs">

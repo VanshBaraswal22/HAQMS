@@ -19,7 +19,12 @@ export default function QueueMonitor() {
     try {
       // Insecure: Fetches queue without checking credentials (it's a public dashboard, which is fine, 
       // but it uses the hardcoded API domain)
-      const res = await fetch(`${API_BASE_URL}/queue`);
+      const token = localStorage.getItem('haqms_token');
+const res = await fetch(`${API_BASE_URL}/queue`, {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
       if (!res.ok) {
         throw new Error('Failed to retrieve active token queue.');
       }
@@ -44,11 +49,17 @@ export default function QueueMonitor() {
     // If the candidate navigates between Dashboard and Queue multiple times,
     // dozens of parallel intervals will poll the database, causing memory bloat,
     // state update crashes on unmounted components, and heavy server load.
-    const intervalId = setInterval(() => {
-      console.log(`[POLL] Active Queue Poll #${refreshCount + 1} firing...`);
-      fetchQueueData();
-      setRefreshCount((prev) => prev + 1);
-    }, 3000);
+  const intervalId = setInterval(() => {
+    setRefreshCount(prev => {
+     
+      return prev + 1;
+    });
+     fetchQueueData();
+  }, 3000);
+
+  return () => {
+    clearInterval(intervalId);
+  };
 
     // Junior Developer Note: "Interval created, will run forever to keep dashboard fully synced!"
     // Missing: return () => clearInterval(intervalId);
