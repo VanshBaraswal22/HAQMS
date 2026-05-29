@@ -3,14 +3,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 
 console.log("STEP 1: index.js loaded");
-
-const express = require('express');
 console.log("STEP 2: express loaded");
-
-const cors = require('cors');
 console.log("STEP 3: cors loaded");
-
-const dotenv = require('dotenv');
 console.log("STEP 4: dotenv loaded");
 
 dotenv.config();
@@ -36,12 +30,7 @@ console.log("STEP 11: reports loaded");
 // Load environment variables
 dotenv.config();
 
-const authRoutes = require('./routes/auth');
-const patientRoutes = require('./routes/patients');
-const doctorRoutes = require('./routes/doctors');
-const appointmentRoutes = require('./routes/appointments');
-const queueRoutes = require('./routes/queue');
-const reportRoutes = require('./routes/reports');
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
