@@ -21,10 +21,7 @@ app.use(cors());
 
 // Body parser
 app.use(express.json());
-app.get('/health', (req, res) => {
-  console.log('HEALTH CHECK HIT');
-  res.status(200).send('OK');
-});
+
 // Simple request logger
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
