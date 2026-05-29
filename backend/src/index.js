@@ -77,7 +77,7 @@ app.use((err, req, res, next) => {
 });
 
 // Listen on port
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`===================================================`);
   console.log(`   HAQMS BACKEND SERVER IS RUNNING ON PORT ${PORT}`);
   console.log(`   ENVIRONMENT: ${process.env.NODE_ENV}`);
