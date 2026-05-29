@@ -167,3 +167,56 @@ Priority was given to issues that:
 4. Created resource leaks or stability issues.
 
 The debugging process focused on reproducing issues, identifying root causes, implementing minimal-risk fixes, and verifying functionality after each change.
+
+## Deployment Challenges and Resolution
+
+### Railway Deployment Failure
+
+#### Initial Problem
+The backend deployed successfully during the build phase but the public URL returned:
+
+Application failed to respond
+
+#### Investigation Process
+Several potential causes were investigated:
+
+- Environment variable issues
+- Prisma database connectivity
+- Route initialization failures
+- Middleware startup crashes
+- Port configuration issues
+
+#### Runtime Debugging
+Additional startup logs were added throughout the application initialization process.
+
+This revealed a duplicate import declaration causing a runtime error:
+
+Identifier 'express' has already been declared
+
+The duplicate declaration was removed.
+
+#### Port Configuration Issue
+Further investigation revealed that Railway was configured with:
+
+Target Port: 8080
+
+while the application was listening on:
+
+Port: 5000
+
+As a result, Railway could not route traffic to the running backend service.
+
+#### Resolution
+The Railway target port was updated from:
+
+8080 → 5000
+
+The application was also verified to bind correctly using:
+
+app.listen(PORT, '0.0.0.0')
+
+#### Result
+The backend became publicly accessible and returned the expected API response.
+
+Deployment URL:
+https://haqms-production-780f.up.railway.app/
