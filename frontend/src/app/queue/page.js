@@ -20,7 +20,7 @@ export default function QueueMonitor() {
       // Insecure: Fetches queue without checking credentials (it's a public dashboard, which is fine, 
       // but it uses the hardcoded API domain)
       const token = localStorage.getItem('haqms_token');
-const res = await fetch(`${API_BASE_URL}/queue`, {
+const res = await fetch(`${API_BASE_URL}/api/queue`, {
   headers: {
     Authorization: `Bearer ${token}`,
   },
